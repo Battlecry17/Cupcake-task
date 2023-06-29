@@ -1,0 +1,25 @@
+h1{
+    color: black;
+}
+
+th, td{
+    border: 1px solid gray;
+    padding: 10px;
+    width: 200px;
+    max-width: 200px;
+}
+
+th{
+    font-weight: normal;
+    text-align: left;
+}
+
+table{
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+.color{
+    background-color: #1B6B93;
+    color: white;
+}
