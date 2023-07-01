@@ -60,8 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-// && start src/index.html
-var MyTable = function () {
+var Table = function () {
     var numberRefs1 = [(0, react_1.useRef)(null), (0, react_1.useRef)(null), (0, react_1.useRef)(null)];
     var numberRefs2 = [(0, react_1.useRef)(null), (0, react_1.useRef)(null), (0, react_1.useRef)(null)];
     var numberRefs3 = [(0, react_1.useRef)(null), (0, react_1.useRef)(null), (0, react_1.useRef)(null)];
@@ -78,8 +77,8 @@ var MyTable = function () {
         var minValue = numbers.reduce(function (min, num) { return (num < min ? num : min); });
         refw.forEach(function (ref) {
             if (ref.current) {
-                console.log(ref.current.innerText);
-                console.log(minValue);
+                // console.log(ref.current.innerText);
+                // console.log(minValue);
                 if (ref.current.innerText === minValue) {
                     ref.current.classList.add('color');
                 }
@@ -137,14 +136,68 @@ var MyTable = function () {
                     error_1 = _a.sent();
                     console.error('Ошибка получения данных:', error_1);
                     return [3 /*break*/, 8];
-                case 8:
-                    fetchData();
-                    return [2 /*return*/];
+                case 8: return [2 /*return*/];
+            }
+        });
+    }); };
+    var pollData = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var requests, responses, index, response, data, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 7, , 8]);
+                    requests = [
+                        fetch('http://localhost:3000/api/v1/first/poll'),
+                        fetch('http://localhost:3000/api/v1/second/poll'),
+                        fetch('http://localhost:3000/api/v1/third/poll')
+                    ];
+                    return [4 /*yield*/, Promise.all(requests)];
+                case 1:
+                    responses = _a.sent();
+                    index = 0;
+                    _a.label = 2;
+                case 2:
+                    if (!(index < responses.length)) return [3 /*break*/, 6];
+                    response = responses[index];
+                    if (!response.ok) return [3 /*break*/, 4];
+                    return [4 /*yield*/, response.json()];
+                case 3:
+                    data = _a.sent();
+                    console.log(data);
+                    numberRefs1[index].current.innerText = data.rates.RUB;
+                    numberRefs2[index].current.innerText = data.rates.USD;
+                    numberRefs3[index].current.innerText = data.rates.EUR;
+                    numberRefs4[index].current.innerText = String(data.rates.RUB / data.rates.USD);
+                    numberRefs5[index].current.innerText = String(data.rates.RUB / data.rates.EUR);
+                    numberRefs6[index].current.innerText = String(data.rates.EUR / data.rates.USD);
+                    return [3 /*break*/, 5];
+                case 4:
+                    console.error("Ошибка получения данных c индексом");
+                    _a.label = 5;
+                case 5:
+                    index++;
+                    return [3 /*break*/, 2];
+                case 6:
+                    colorMinNumber(numberRefs1);
+                    colorMinNumber(numberRefs2);
+                    colorMinNumber(numberRefs3);
+                    colorMinNumber(numberRefs4);
+                    colorMinNumber(numberRefs5);
+                    colorMinNumber(numberRefs6);
+                    pollData();
+                    return [3 /*break*/, 8];
+                case 7:
+                    error_2 = _a.sent();
+                    console.error('Ошибка получения данных:', error_2);
+                    pollData();
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
             }
         });
     }); };
     (0, react_1.useEffect)(function () {
         fetchData();
+        pollData();
     }, []);
     return (react_1.default.createElement("table", null,
         react_1.default.createElement("thead", null,
@@ -185,30 +238,9 @@ var MyTable = function () {
                 react_1.default.createElement("td", { ref: numberRefs6[1] }, "1"),
                 react_1.default.createElement("td", { ref: numberRefs6[2] }, "1")))));
 };
-// const Test = () => {
-//     const testRef: RefObject<HTMLHeadingElement> = useRef(null);
-//     const [testState, setTestState] = useState(true);
-//     // function click() {
-//     //     console.log('WTF');
-//     //     if (testRef.current!) {
-//     //         testState ? testRef.current.style.color = "red" : testRef.current.style.color = "blue";
-//     //     }
-//     // }
-//     useEffect(() => {
-//         setTimeout(() => {
-//             setTestState(!testState);
-//             if (testRef.current!) {
-//                 testState ? testRef.current.style.color = "red" : testRef.current.style.color = "blue";
-//             }
-//         }, 1000)
-//     })
-//     return (
-//         <></>
-//     )
-// }
 function App() {
     return (react_1.default.createElement("div", null,
-        react_1.default.createElement(MyTable, null)));
+        react_1.default.createElement(Table, null)));
 }
 ;
 exports.default = App;

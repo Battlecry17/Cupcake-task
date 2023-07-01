@@ -22,8 +22,8 @@ const Table = () => {
         refw.forEach((ref) => {
 
             if (ref.current) {
-                console.log(ref.current.innerText);
-                console.log(minValue);
+                // console.log(ref.current.innerText);
+                // console.log(minValue);
 
                 if (ref.current.innerText === minValue) {
                     ref.current.classList.add('color');
@@ -72,12 +72,54 @@ const Table = () => {
         } catch (error) {
             console.error('Ошибка получения данных:', error);
         }
-        fetchData();
+    };
+
+    const pollData = async () => {
+        try {
+            const requests = [
+                fetch('http://localhost:3000/api/v1/first/poll'),
+                fetch('http://localhost:3000/api/v1/second/poll'),
+                fetch('http://localhost:3000/api/v1/third/poll')
+            ];
+
+            const responses = await Promise.all(requests);
+
+            for (let index = 0; index < responses.length; index++) {
+                const response = responses[index];
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+
+                    numberRefs1[index].current!.innerText = data.rates.RUB;
+                    numberRefs2[index].current!.innerText = data.rates.USD;
+                    numberRefs3[index].current!.innerText = data.rates.EUR;
+
+                    numberRefs4[index].current!.innerText = String(data.rates.RUB / data.rates.USD);
+                    numberRefs5[index].current!.innerText = String(data.rates.RUB / data.rates.EUR);
+                    numberRefs6[index].current!.innerText = String(data.rates.EUR / data.rates.USD);
+
+                } else {
+                    console.error("Ошибка получения данных c индексом");
+                }
+            }
+            colorMinNumber(numberRefs1);
+            colorMinNumber(numberRefs2);
+            colorMinNumber(numberRefs3);
+            colorMinNumber(numberRefs4);
+            colorMinNumber(numberRefs5);
+            colorMinNumber(numberRefs6);
+            pollData();
+        } catch (error) {
+            console.error('Ошибка получения данных:', error);
+            pollData();
+        }
     };
 
 
     useEffect(() => {
         fetchData();
+        pollData();
     }, []);
 
 
